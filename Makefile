@@ -13,4 +13,4 @@ test:
 	$(PHP) ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php -c ./phpunit.xml.dist ./tests
 
 testrunner:
-	$(TESTRUNNER) "phpunit"  --preload-script ./vendor/autoload.php  --phpunit-config ./phpunit.xml.dist --autotest ./tests ./public_html
+	$(TESTRUNNER) "phpunit"  --preload-script ./vendor/autoload.php  --phpunit-config ./phpunit.xml.dist --autotest ./tests ./src
