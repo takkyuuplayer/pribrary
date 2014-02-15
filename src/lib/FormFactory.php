@@ -13,4 +13,21 @@ class FormFactory
             ->getForm()
         ;
     }
+
+    public static function getBookEditForm(Silex\Application $app, array $category_ids)
+    {
+        return $app['form.factory']->createBuilder('form')
+            ->add('category_id', 'text', array(
+                'constraints' => array(new Assert\Choice(array_values($category_ids)),),
+            ))
+            ->add('author', 'text', array(
+                'constraints' => array(new Assert\NotBlank(),)))
+            ->add('title', 'text', array(
+                'constraints' => array(new Assert\NotBlank(),)))
+            ->add('publisher', 'text', array(
+                'constraints' => array(new Assert\NotBlank(),)))
+            ->add('comment', 'text')
+            ->getForm()
+        ;
+    }
 }
