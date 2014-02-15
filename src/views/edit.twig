@@ -3,14 +3,20 @@
 
 {% block content %}
   <legend>New Book</legend>
-  <form class="form-horizontal" role="form" method="post" action="/edit">
+  <form class="form-horizontal" role="form" method="post" action="/edit/{{book.id|default(0)|e}}">
   {{ form_widget(form._token) }}
     <div class="form-group">
       <label class="col-sm-2 control-label">Category</label>
       <div class="col-sm-10">
         <select id="categories" class="form-control" name="form[category_id]">
           {% for category in categories %}
-            <option value="{{category.id|e}}" {% if book and book.category_id == category.id %}selected{% endif %}>
+            <option value="{{category.id|e}}"
+              {% if posted is defined and posted.category_id == category.id %}
+                selected
+              {% elseif book and book.category_id == category.id %}
+                selected
+              {% endif %}
+              >
               {{category.label}}: {{category.description}}
             </option>
           {% endfor %}
@@ -21,35 +27,42 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Author</label>
       <div class="col-sm-10">
-        <input name="form[author]" type="text" class="form-control" placeholder="Author" value="{{book.author|default()|e}}">
+        <input required name="form[author]" type="text"
+          class="form-control" placeholder="Author"
+          value="{{posted is defined ? posted.author : book.author | default() |e}}"
+          >
       <span class="help-inline text-danger">{{ form_errors(form.author) }}</span>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Title</label>
       <div class="col-sm-10">
-        <input name="form[title]" type="text" class="form-control" placeholder="Title" value="{{book.title|default()|e}}">
+        <input required name="form[title]" type="text"
+          class="form-control" placeholder="Title"
+          value="{{ posted is defined ? posted.title : book.title | default() |e}}">
       <span class="help-inline text-danger">{{ form_errors(form.title) }}</span>
       </div>
     </div>
     <div class="form-group">
       <label  class="col-sm-2 control-label">Publisher</label>
       <div class="col-sm-10">
-        <input name="form[publisher]" type="text" class="form-control" placeholder="Publisher" value="{{book.publisher|default()|e}}">
+        <input required name="form[publisher]" type="text"
+          class="form-control" placeholder="Publisher"
+          value="{{posted is defined ? posted.publisher : book.publisher |default()|e}}">
       <span class="help-inline text-danger">{{ form_errors(form.publisher) }}</span>
       </div>
     </div>
     <div class="form-group">
       <label  class="col-sm-2 control-label">Comment</label>
       <div class="col-sm-10">
-        <input name="form[comment]" type="text" class="form-control" placeholder="Comment" value="{{stash_data.comment|default()|e}}">
+        <input name="form[comment]" type="text" class="form-control" placeholder="Comment"
+          value="{{ posted is defined ? posted.comment : stash_data.comment|default()|e}}">
       <span class="help-inline text-danger">{{ form_errors(form.comment) }}</span>
       </div>
     </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button type="submit" class="btn btn-primary">Register</button>
-        <button type="reset" class="btn btn-default">Reset</button>
       </div>
     </div>
   </form>

@@ -59,7 +59,7 @@ $app->get('/edit/{book_id}', function($book_id) use ($app) {
         'form' => $form->createView(),
     ));
 });
-$app->post('/edit', function(Request $request) use ($app) {
+$app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     $categories = ORM::for_table('categories')->find_many();
     $category_ids = array_map(function($category) {
         return $category->id;
@@ -77,8 +77,14 @@ $app->post('/edit', function(Request $request) use ($app) {
         ));
     }
 
+    $book = ORM::for_table('books')
+        ->where_equal('id', $book_id)
+        ->find_one();
+    if(!$book) {
+        $book = ORM::for_table('books')->create();
+    }
+
     $values = $form->getData();
-    $book = ORM::for_table('books')->create();
     $book->category_id = $values['category_id'];
     $book->author      = $values['author'];
     $book->title       = $values['title'];
