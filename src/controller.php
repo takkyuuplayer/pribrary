@@ -39,3 +39,23 @@ $app->post('/category', function(Request $request) use ($app) {
 
     return $app->redirect('/category');
 });
+
+$app->get('/edit', function() use ($app) {
+    $subRequest = Request::create('/edit/0', 'GET');
+    return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+});
+$app->get('/edit/{book_id}', function($book_id) use ($app) {
+    $book = ORM::for_table('books')
+        ->where_equal('id', $book_id)
+        ->find_one();
+
+    $categories = ORM::for_table('categories')->find_many();
+    $form = FormFactory::getBookEditForm($app, array());
+
+    return $app['twig']->render('edit.twig',
+        array('book' => $book,
+        'categories' => $categories,
+        'stash_data' => $book ? json_decode($book->stash_data) : '',
+        'form' => $form->createView(),
+    ));
+});
