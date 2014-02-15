@@ -1,0 +1,16 @@
+{% extends 'layout.twig' %}
+{% set active_page = "edit" %}
+
+{% block content %}
+    <div class="col-md-10">
+      <div class="alert alert-success">Created!</div>
+      <dl class="dl-horizontal">
+        <dt>Id</dt><dd>{{ book.id | escape }}</dd>
+        <dt>Category</dt><dd>{{ book.category_id | escape }}</dd>
+        <dt>Title</dt><dd>{{ book.title|escape }}</dd>
+        <dt>Publisher</dt><dd>{{ book.publisher|escape }}</dd>
+        <dt>Comment</dt><dd>{{ stash_data.comment|escape }}</dd>
+      </dl>
+    </div>
+  </div>
+{% endblock %}

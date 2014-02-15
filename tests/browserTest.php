@@ -43,7 +43,6 @@ class BrowserTest extends WebTestCase
 
         $form = $crawler->selectButton('Register')->form();
         $crawler = $client->submit($form);
-        $this->assertFalse($client->getResponse()->isRedirect(), 'validation error');
 
         $before = ORM::for_table('categories')->count();
         date_default_timezone_set('Asia/Tokyo');
@@ -65,5 +64,18 @@ class BrowserTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[publisher]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[comment]"]'));
         $this->assertCount(1, $crawler->filter('input[type="hidden"][name="form[_token]"]'));
+
+        $form = $crawler->selectButton('Register')->form();
+        $crawler = $client->submit($form);
+        $this->assertCount(1, $crawler->filter('input[name="form[_token]"]'));
+
+        $before = ORM::for_table('books')->count();
+        $form = $crawler->selectButton('Register')->form();
+        $form['form[author]']    = basename(__FILE__, '.php');
+        $form['form[title]']     = basename(__FILE__, '.php');
+        $form['form[publisher]'] = basename(__FILE__, '.php');
+        $crawler = $client->submit($form);
+        $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
+        $this->assertSame($before + 1, ORM::for_table('books')->count(), '1 book inserted');
     }
 }

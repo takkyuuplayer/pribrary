@@ -59,3 +59,38 @@ $app->get('/edit/{book_id}', function($book_id) use ($app) {
         'form' => $form->createView(),
     ));
 });
+$app->post('/edit', function(Request $request) use ($app) {
+    $categories = ORM::for_table('categories')->find_many();
+    $category_ids = array_map(function($category) {
+        return $category->id;
+    }, $categories);
+
+    $form = FormFactory::getBookEditForm($app, $category_ids);
+    $form->handleRequest($request);
+    if(!$form->isValid()) {
+        return $app['twig']->render('edit.twig',
+            array(
+                'book' => null,
+                'categories' => $categories,
+                'posted' => $form->getData(),
+                'form' => $form->createView(),
+        ));
+    }
+
+    $values = $form->getData();
+    $book = ORM::for_table('books')->create();
+    $book->category_id = $values['category_id'];
+    $book->author      = $values['author'];
+    $book->title       = $values['title'];
+    $book->publisher   = $values['publisher'];
+    $book->stash_data  = json_encode([
+        'comment' => $values['comment'],
+    ]);
+    $book->save();
+
+    return $app['twig']->render('show.twig',
+        array('book' => $book,
+              'stash_data' => json_decode($book->stash_data))
+    );
+});
+
