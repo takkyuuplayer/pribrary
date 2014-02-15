@@ -5,7 +5,7 @@ class FormFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->app = require __DIR__ . '/../src/public_html/index.php';
+        $this->app = require __DIR__ . '/../src/bootstrap.php';
         $this->app['session.test'] = true;
     }
     public function testCategoryEditForm()
