@@ -6,13 +6,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 require_once PROJECT_DIR . '/src/lib/FormFactory.php';
 
 $app->get('/', function() use ($app) {
-    return $app['twig']->render('top.twig');
+    return $app['twig']->render('top.html');
 });
 
 $app->get('/category', function() use ($app) {
     $categories = ORM::for_table('categories')->find_many();
     $form = FormFactory::getCategoryEditForm($app);
-    return $app['twig']->render('category.twig',
+    return $app['twig']->render('category.html',
         array('categories' => $categories,
         'form' => $form->createView(),
     ));
@@ -23,7 +23,7 @@ $app->post('/category', function(Request $request) use ($app) {
 
     if(!$form->isValid()) {
         $categories = ORM::for_table('categories')->find_many();
-        return $app['twig']->render('category.twig',
+        return $app['twig']->render('category.html',
             array('categories' => $categories,
                 'posted' => $form->getData(),
                 'form' => $form->createView(),
@@ -52,7 +52,7 @@ $app->get('/edit/{book_id}', function($book_id) use ($app) {
     $categories = ORM::for_table('categories')->find_many();
     $form = FormFactory::getBookEditForm($app, array());
 
-    return $app['twig']->render('edit.twig',
+    return $app['twig']->render('edit.html',
         array('book' => $book,
         'categories' => $categories,
         'stash_data' => $book ? json_decode($book->stash_data) : '',
@@ -68,7 +68,7 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     $form = FormFactory::getBookEditForm($app, $category_ids);
     $form->handleRequest($request);
     if(!$form->isValid()) {
-        return $app['twig']->render('edit.twig',
+        return $app['twig']->render('edit.html',
             array(
                 'book' => null,
                 'categories' => $categories,
@@ -94,9 +94,15 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     ]);
     $book->save();
 
-    return $app['twig']->render('show.twig',
+    return $app['twig']->render('show.html',
         array('book' => $book,
               'stash_data' => json_decode($book->stash_data))
     );
+});
+
+$app->get('/search', function() use ($app) {
+    $books = ORM::for_table('books')->find_many();
+    $categories = ORM::for_table('categories')->find_many();
+    return $app['twig']->render('search.html', array('books' => $books, 'categories' => $categories));
 });
 
