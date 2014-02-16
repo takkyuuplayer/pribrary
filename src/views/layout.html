@@ -23,11 +23,11 @@
       {% set active_page = active_page|default('') %}
       <ul class="nav nav-pills nav-stacked">
         <li>New</li>
-        <li {% if active_page == 'category' %}class="active"{% endif %}><a href="#">Category</a></li>
-        <li {% if active_page == 'edit'     %}class="active"{% endif %}><a href="#">New / Edit</a></li>
+        <li {% if active_page == 'category' %}class="active"{% endif %}><a href="/category">Category</a></li>
+        <li {% if active_page == 'edit'     %}class="active"{% endif %}><a href="/edit">New / Edit</a></li>
 
         <li>Search</li>
-        <li {% if active_page == 'search'   %}class="active"{% endif %}><a href="#">Search</a></li>
+        <li {% if active_page == 'search'   %}class="active"{% endif %}><a href="/search">Search</a></li>
       </ul>
     </div>
     <div class="col-md-10">

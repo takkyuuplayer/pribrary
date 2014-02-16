@@ -22,9 +22,9 @@ class BrowserTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter('a:contains("Category")'));
-        $this->assertCount(1, $crawler->filter('a:contains("New")'));
-        $this->assertCount(1, $crawler->filter('a:contains("Search")'));
+        $this->assertCount(1, $crawler->filter('a:contains("Category")[href="/category"]'));
+        $this->assertCount(1, $crawler->filter('a:contains("New")[href="/edit"]'));
+        $this->assertCount(1, $crawler->filter('a:contains("Search")[href="/search"]'));
     }
 
     public function testCategoryPage()
