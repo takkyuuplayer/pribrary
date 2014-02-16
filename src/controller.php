@@ -34,7 +34,7 @@ $app->post('/category', function(Request $request) use ($app) {
     $values = $form->getData();
     $category->label = $values['label'];
     $category->description = is_null($values['description']) ? '' : $values['description'];
-    $category->stash_data = json_encode([]);
+    $category->stash_data = json_encode(array());
     $category->save();
 
     return $app->redirect('/category');
@@ -89,9 +89,9 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     $book->author      = $values['author'];
     $book->title       = $values['title'];
     $book->publisher   = $values['publisher'];
-    $book->stash_data  = json_encode([
+    $book->stash_data  = json_encode(array(
         'comment' => $values['comment'],
-    ]);
+    ));
     $book->save();
 
     return $app['twig']->render('show.html',
