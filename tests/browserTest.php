@@ -98,7 +98,7 @@ class BrowserTest extends WebTestCase
         $form['title']     = basename(__FILE__, '.php');
         $form['publisher'] = basename(__FILE__, '.php');
         $crawler = $client->submit($form);
-        $this->assertGreaterThan(3, $crawler->filter(sprintf('td:contains("%s")', basename(__FILE__, '.php')))->count());
+        $this->assertGreaterThanOrEqual(3, $crawler->filter(sprintf('td:contains("%s")', basename(__FILE__, '.php')))->count());
         $this->assertTrue($client->getResponse()->isOk());
     }
 }
