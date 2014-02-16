@@ -70,16 +70,24 @@
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-primary">Register</button>
+      <button type="submit" class="btn btn-primary" id="register_button">Register</button>
     </div>
   </div>
 </form>
 <script type="text/javascript">
 jQuery(function($){
-    　$(".datepicker").datepicker({
-dateFormat: 'yy-mm-dd'
+  $(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+  $("#register_button").on('click', function() {
+    localStorage.setItem('user', $('input[name="form[user]"').val());
+    localStorage.setItem('place', $('input[name="form[place]"').val());
+  });
+  if($('input[name="form[user]"]').val() === '') {
+    $('input[name="form[user]"]').val(localStorage.getItem('user'));
+  }
+  if($('input[name="form[place]"]').val() === '') {
+    $('input[name="form[place]"]').val(localStorage.getItem('place'));
+  }
 });
-    });
 </script>
 
 {% endblock %}
