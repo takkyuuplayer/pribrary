@@ -184,5 +184,24 @@ $app->post('/borrow', function(Request $request) use ($app) {
     ));
     $rental->save();
 
-    return $app->redirect('/search');
+    return $app->redirect('/rental');
+});
+
+$app->get('/rental', function() use ($app) {
+    $rentals = ORM::for_table('rentals')
+        ->select('*')
+        ->select('rentals.stash_data', 'stash_data')
+        ->join('books', array(
+            'rentals.book_id', '=', 'books.id'
+        ))
+        ->join('categories', array(
+            'books.category_id', '=', 'categories.id'
+        ))
+        ->where_equal('rentals.return_flag', '0')
+        ->order_by_desc('id')
+        ->find_array();
+
+    return $app['twig']->render('rental.html',
+        array('rentals' => $rentals,
+    ));
 });

@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% set active_page = "edit" %}
+
+{% block content %}
+<legend>Current categories</legend>
+{{ rentals | length }} rentals.
+<table class="table table-bordered table-hover table-condensed">
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Title</th>
+      <th>Borrower</th>
+      <th>Place</th>
+      <th>period</th>
+      <th>Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for rental in rentals %}
+  <tr>
+    <td>{{rental.label|e}}: {{rental.id}}</td>
+    <td>{{rental.title|e}}</td>
+    <td>{{rental.user|e}}</td>
+    <td>{{rental.place|e}}</td>
+    <td>{{rental.start_date|date('Y/m/d')|e}} - {{rental.end_date|date('m/d')|e}}</td>
+    <td>{% set stash_data = json_decode(rental.stash_data) %} {{ stash_data.comment|e}} </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

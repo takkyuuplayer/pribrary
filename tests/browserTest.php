@@ -130,4 +130,11 @@ class BrowserTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
         $this->assertSame($before + 1, ORM::for_table('rentals')->count(), '1 book inserted');
     }
+
+    public function testRentalPage()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/rental');
+        $this->assertTrue($client->getResponse()->isOk());
+    }
 }
