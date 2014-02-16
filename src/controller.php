@@ -100,9 +100,26 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     );
 });
 
-$app->get('/search', function() use ($app) {
-    $books = ORM::for_table('books')->find_many();
-    $categories = ORM::for_table('categories')->find_many();
-    return $app['twig']->render('search.html', array('books' => $books, 'categories' => $categories));
-});
+$app->get('/search', function(Request $request) use ($app) {
+    $book = ORM::for_table('books');
+    if($request->get('category_id', null)) {
+        $book->where_equal('category_id', $request->get('category_id'));
+    }
+    if($request->get('author', null)) {
+        $book->where_like('author', sprintf('%%%s%%', $request->get('author')));
+    }
+    if($request->get('title', null)) {
+        $book->where_like('title', sprintf('%%%s%%', $request->get('title')));
+    }
+    if($request->get('publisher', null)) {
+        $book->where_like('publisher', sprintf('%%%s%%',$request->get('publisher')));
+    }
 
+    $books = $book->find_many();
+    $categories = ORM::for_table('categories')->find_many();
+    return $app['twig']->render('search.html',
+        array('books' => $books,
+        'categories' => $categories,
+        'posted' => $request->query->all(),
+    ));
+});

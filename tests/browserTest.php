@@ -78,4 +78,24 @@ class BrowserTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
         $this->assertSame($before + 1, ORM::for_table('books')->count(), '1 book inserted');
     }
+
+    public function testSearchPage()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/search');
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('select[name="category_id"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="author"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="title"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="publisher"]'));
+
+        $form = $crawler->selectButton('Search')->form();
+        $form['author']    = basename(__FILE__, '.php');
+        $form['title']     = basename(__FILE__, '.php');
+        $form['publisher'] = basename(__FILE__, '.php');
+        $crawler = $client->submit($form);
+        $this->assertGreaterThan(3, $crawler->filter(sprintf('td:contains("%s")', basename(__FILE__, '.php')))->count());
+        $this->assertTrue($client->getResponse()->isOk());
+    }
 }
