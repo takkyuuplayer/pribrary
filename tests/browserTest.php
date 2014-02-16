@@ -121,7 +121,7 @@ class BrowserTest extends WebTestCase
 
         $form = $crawler->selectButton('Register')->form();
         $crawler = $client->submit($form);
-        $this->assertCount(1, $crawler->filter('input[name="form[_token]"]'), 'invalid');
+        $this->assertCount(1, $crawler->filter('input[name="form[user]"]'), 'invalid');
 
         $before = ORM::for_table('rentals')->count();
         $form = $crawler->selectButton('Register')->form();
@@ -130,7 +130,7 @@ class BrowserTest extends WebTestCase
         $form['form[end_date]'] = date('Y-m-d', strtotime('+1 week'));
         $form['form[place]'] = basename(__FILE__, '.php');
         $crawler = $client->submit($form);
-        $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
+        $this->assertCount(0, $crawler->filter('input[name="form[user]"]'));
         $this->assertSame($before + 1, ORM::for_table('rentals')->count(), '1 book inserted');
     }
 
@@ -140,5 +140,8 @@ class BrowserTest extends WebTestCase
         $crawler = $client->request('GET', '/rental');
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertCount(1, $crawler->filter('li:contains("Rental").active'));
+
+        $this->assertGreaterThanOrEqual(1, $crawler->filter('input[type="submit"][value="Return"]')->count());
+        $this->assertGreaterThanOrEqual(1, $crawler->filter('input[name="form[_token]"]')->count());
     }
 }

@@ -201,7 +201,9 @@ $app->get('/rental', function() use ($app) {
         ->order_by_desc('id')
         ->find_array();
 
+    $csrf_form = $app['form.factory']->createBuilder('form')->getForm();
     return $app['twig']->render('rental.html',
         array('rentals' => $rentals,
+              'form' => $csrf_form->createView(),
     ));
 });

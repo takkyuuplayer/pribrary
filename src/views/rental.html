@@ -13,6 +13,7 @@
       <th>Place</th>
       <th>period</th>
       <th>Comment</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,10 @@
     <td>{{rental.place|e}}</td>
     <td>{{rental.start_date|date('Y/m/d')|e}} - {{rental.end_date|date('m/d')|e}}</td>
     <td>{% set stash_data = json_decode(rental.stash_data) %} {{ stash_data.comment|e}} </td>
+    <td><form method="delete" action="/rental/{{rental.id|e}}">
+        <input type="hidden" name="form[_token]" value="{{ form._token.vars.value }}">
+        <input type="submit" value="Return" class="btn btn-primary" title="返却">
+    </td>
   </tr>
   {% endfor %}
   </tbody>
