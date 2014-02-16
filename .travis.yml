@@ -7,5 +7,7 @@ php:
 
 before_script:
   - composer install
+  - sqlite3 db/books.sqlite3 <db/library.sql
+  - chmod 777 db/books.sqlite3
 
 script: make test
