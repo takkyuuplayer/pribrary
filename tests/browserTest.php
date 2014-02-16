@@ -105,6 +105,9 @@ class BrowserTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk());
     }
 
+    /**
+     * @depends testBookEditPage
+     */
     public function testBorrowPage()
     {
         $client = $this->createClient();
@@ -134,6 +137,9 @@ class BrowserTest extends WebTestCase
         $this->assertSame($before + 1, ORM::for_table('rentals')->count(), '1 book inserted');
     }
 
+    /**
+     * @depends testBorrowPage
+     */
     public function testRentalPage()
     {
         $client = $this->createClient();
@@ -143,5 +149,12 @@ class BrowserTest extends WebTestCase
 
         $this->assertGreaterThanOrEqual(1, $crawler->filter('input[type="submit"][value="Return"]')->count());
         $this->assertGreaterThanOrEqual(1, $crawler->filter('input[name="form[_token]"]')->count());
+
+        $before = ORM::for_table('rentals')->where_equal('return_flag', 0)->count();
+        $form = $crawler->selectButton('Return')->form();
+        $client->submit($form);
+
+        $this->assertEquals($before - 1, ORM::for_table('rentals')->where_equal('return_flag', 0)->count(), 'returned');
     }
+
 }

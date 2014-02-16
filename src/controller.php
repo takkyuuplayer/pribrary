@@ -191,6 +191,7 @@ $app->get('/rental', function() use ($app) {
     $rentals = ORM::for_table('rentals')
         ->select('*')
         ->select('rentals.stash_data', 'stash_data')
+        ->select('rentals.id', 'rental_id')
         ->join('books', array(
             'rentals.book_id', '=', 'books.id'
         ))
@@ -206,4 +207,19 @@ $app->get('/rental', function() use ($app) {
         array('rentals' => $rentals,
               'form' => $csrf_form->createView(),
     ));
+});
+$app->post('/rental/delete/{rental_id}', function($rental_id, Request $request) use ($app) {
+    $csrf_form = $app['form.factory']->createBuilder('form')->getForm();
+    $csrf_form->handleRequest($request);
+    if(!$csrf_form->isValid()) {
+        return $app->redirect('/rental');
+    }
+
+    $rental = ORM::for_table('rentals')
+        ->where_equal('id', $rental_id)
+        ->find_one();
+    $rental->return_flag = 1;
+    $rental->save();
+
+    return $app->redirect('/rental');
 });
