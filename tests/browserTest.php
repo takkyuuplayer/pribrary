@@ -79,6 +79,9 @@ class BrowserTest extends WebTestCase
         $this->assertSame($before + 1, ORM::for_table('books')->count(), '1 book inserted');
     }
 
+    /**
+     * @depends testBookEditPage
+     */
     public function testSearchPage()
     {
         $client = $this->createClient();
