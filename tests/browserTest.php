@@ -45,7 +45,6 @@ class BrowserTest extends WebTestCase
         $crawler = $client->submit($form);
 
         $before = ORM::for_table('categories')->count();
-        date_default_timezone_set('Asia/Tokyo');
         $form = $crawler->selectButton('Register')->form();
         $form['form[label]'] = basename(__FILE__, '.php') . date(' Y-m-d H:i:s');
         $crawler = $client->submit($form);
@@ -114,5 +113,21 @@ class BrowserTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[end_date]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[place]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[comment]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="hidden"][name="form[book_id]"]'));
+        $this->assertCount(1, $crawler->filter('input[name="form[_token]"]'));
+
+        $form = $crawler->selectButton('Register')->form();
+        $crawler = $client->submit($form);
+        $this->assertCount(1, $crawler->filter('input[name="form[_token]"]'), 'invalid');
+
+        $before = ORM::for_table('rentals')->count();
+        $form = $crawler->selectButton('Register')->form();
+        $form['form[user]']    = basename(__FILE__, '.php');
+        $form['form[start_date]']     = date('Y-m-d');
+        $form['form[end_date]'] = date('Y-m-d', strtotime('+1 week'));
+        $form['form[place]'] = basename(__FILE__, '.php');
+        $crawler = $client->submit($form);
+        $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
+        $this->assertSame($before + 1, ORM::for_table('rentals')->count(), '1 book inserted');
     }
 }

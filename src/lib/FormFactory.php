@@ -34,7 +34,7 @@ class FormFactory
     public static function getBookBorrowForm(Silex\Application $app, array $book_ids)
     {
         return $app['form.factory']->createBuilder('form')
-            ->add('book_id', 'text', array(
+            ->add('book_id', 'hidden', array(
                 'constraints' => array(new Assert\Choice(array_values($book_ids)),),
             ))
             ->add('user', 'text', array(

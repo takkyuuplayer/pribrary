@@ -2,6 +2,8 @@
 require_once __DIR__. '/config/constants.php';
 require_once PROJECT_DIR . '/vendor/autoload.php';
 
+date_default_timezone_set(TIMEZONE);
+
 $app = new Silex\Application();
 $app->register(new Silex\Provider\FormServiceProvider());
 $app->register(new Silex\Provider\ValidatorServiceProvider());

@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS rentals (
     place TEXT NOT NULL,
     return_flag INTEGER DEFAULT 0,
     stash_data TEXT,
-    borrow_from INTEGER,
-    borrow_end INTEGER,
+    start_date INTEGER,
+    end_date INTEGER,
     created_at INTEGER,
     updated_at INTEGER
 );

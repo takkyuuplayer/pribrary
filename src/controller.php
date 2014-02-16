@@ -137,9 +137,52 @@ $app->get('/borrow/{book_id}', function($book_id) use ($app) {
         ->where_equal('id', $book->category_id)
         ->find_one();
 
+    $form = FormFactory::getBookBorrowForm($app, array());
+
     return $app['twig']->render('borrow.html',
         array('book' => $book,
               'category' => $category,
-        'stash_data' => $book ? json_decode($book->stash_data) : '',
+            'stash_data' => $book ? json_decode($book->stash_data) : '',
+                'form' => $form->createView(),
     ));
+});
+$app->post('/borrow', function(Request $request) use ($app) {
+    $book_ids = array_map(function($row) {
+        return $row['id'];
+    }, ORM::for_table('books')
+        ->select('id')
+        ->find_array()
+    );
+    $form = FormFactory::getBookBorrowForm($app, $book_ids);
+    $form->handleRequest($request);
+    if(!$form->isValid()) {
+        $posted = $form->getData();
+        $book = ORM::for_table('books')
+            ->where_equal('id', $posted['book_id'])
+            ->find_one();
+        $category = ORM::for_table('categories')
+            ->where_equal('id', $book->category_id)
+            ->find_one();
+        return $app['twig']->render('borrow.html',
+        array('book' => $book,
+            'category'   => $category,
+            'stash_data' => $book ? json_decode($book->stash_data) : '',
+            'form'       => $form->createView(),
+            'posted'     => $posted,
+        ));
+    }
+
+    $values = $form->getData();
+    $rental = ORM::for_table('rentals')->create();
+    $rental->book_id = $values['book_id'];
+    $rental->user = $values['user'];
+    $rental->start_date = strtotime($values['start_date']);
+    $rental->end_date = strtotime($values['end_date']);
+    $rental->place = $values['place'];
+    $rental->stash_data  = json_encode(array(
+        'comment' => $values['comment'],
+    ));
+    $rental->save();
+
+    return $app->redirect('/search');
 });
