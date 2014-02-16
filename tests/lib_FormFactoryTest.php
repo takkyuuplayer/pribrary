@@ -59,4 +59,26 @@ class FormFactoryTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertTrue($form->isValid());
     }
+
+    public function testBookBorrowForm()
+    {
+        $book_ids = array_map(function($row) {
+            return $row['id'];
+        }, ORM::for_table('books')
+            ->select('id')
+            ->find_array()
+        );
+
+        $form = FormFactory::getBookBorrowForm($this->app, $book_ids);
+        $view = $form->createView();
+        $form->bind(array('book_id' => $book_ids[0],
+            'user' => 'user',
+            'start_date' => date('Y-m-d'),
+            'end_date' => date('Y-m-d'),
+            'place' => 'pla',
+            'comment' => 'co',
+            '_token' => $view['_token']->vars['value'],
+        ));
+        $this->assertTrue($form->isValid());
+    }
 }
