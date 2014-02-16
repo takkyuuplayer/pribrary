@@ -23,7 +23,7 @@ class BrowserTest extends WebTestCase
 
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertCount(1, $crawler->filter('a:contains("Category")[href="/category"]'));
-        $this->assertCount(1, $crawler->filter('a:contains("New")[href="/edit"]'));
+        $this->assertCount(1, $crawler->filter('a:contains("Book")[href="/edit"]'));
         $this->assertCount(1, $crawler->filter('a:contains("Search")[href="/search"]'));
     }
 
@@ -33,6 +33,7 @@ class BrowserTest extends WebTestCase
 
         $crawler = $client->request('GET', '/category');
         $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('a:contains("Category")[href="/category"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[label]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[description]"]'));
 
@@ -58,6 +59,7 @@ class BrowserTest extends WebTestCase
         $crawler = $client->request('GET', '/edit');
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertCount(1, $crawler->filter('select[name="form[category_id]"]'));
+        $this->assertCount(1, $crawler->filter('li:contains("Book").active'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[author]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[title]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[publisher]"]'));
@@ -87,6 +89,7 @@ class BrowserTest extends WebTestCase
 
         $crawler = $client->request('GET', '/search');
         $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('li:contains("Search").active'));
         $this->assertCount(1, $crawler->filter('select[name="category_id"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="author"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="title"]'));
@@ -107,7 +110,7 @@ class BrowserTest extends WebTestCase
         $client = $this->createClient();
         $crawler = $client->request('GET', '/borrow/1');
         $this->assertTrue($client->getResponse()->isOk());
-        $form = $crawler->selectButton('Register')->form();
+        $this->assertCount(1, $crawler->filter('li:contains("Rental").active'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[user]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[start_date]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[end_date]"]'));
@@ -136,5 +139,6 @@ class BrowserTest extends WebTestCase
         $client = $this->createClient();
         $crawler = $client->request('GET', '/rental');
         $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('li:contains("Rental").active'));
     }
 }
