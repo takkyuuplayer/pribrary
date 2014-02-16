@@ -7,15 +7,64 @@
     <h3 class="panel-title">Book Information</h3>
   </div>
   <div class="panel-body">
-<dl class="dl-horizontal">
-  <dt>Id</dt><dd>{{ book.id | escape }}</dd>
-  <dt>Category</dt><dd>{{category.label|default('no label')|e}}: {{category.description|default('')|e}}</dd>
-  <dt>Title</dt><dd>{{ book.title|escape }}</dd>
-  <dt>Publisher</dt><dd>{{ book.publisher|escape }}</dd>
-  <dt>Comment</dt><dd>{{ stash_data.comment|escape }}</dd>
-</dl>
+    <dl class="dl-horizontal">
+      <dt>Id</dt><dd>{{ book.id | escape }}</dd>
+      <dt>Category</dt><dd>{{category.label|default('no label')|e}}: {{category.description|default('')|e}}</dd>
+      <dt>Title</dt><dd>{{ book.title|escape }}</dd>
+      <dt>Publisher</dt><dd>{{ book.publisher|escape }}</dd>
+      <dt>Comment</dt><dd>{{ stash_data.comment|escape }}</dd>
+    </dl>
   </div>
 </div>
+<form class="form-horizontal" role="form" method="post" action="/borrow/{{book.id}}">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+      <input name="form[user]" type="text" class="form-control" placeholder="Your name" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Borrow date</label>
+    <div class="col-sm-10">
+      <input name="form[start_date]" type="text"
+      class="form-control datepicker" placeholder="Brrowing date" required
+      value="{{'now'|date('Y-m-d') }}"
+      >
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Return date</label>
+    <div class="col-sm-10">
+      <input name="form[end_date]" type="text"
+      class="form-control datepicker" placeholder="Returning date" required
+      value="{{'+1 week'|date('Y-m-d') }}"
+      >
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Place</label>
+    <div class="col-sm-10">
+      <input name="form[place]" type="text" class="form-control" placeholder="Where you keep the book" >
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Comment</label>
+    <div class="col-sm-10">
+      <input name="form[comment]" type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+  </div>
+</form>
+<script type="text/javascript">
+jQuery(function($){
+    　$(".datepicker").datepicker({
+dateFormat: 'yy-mm-dd'
+});
+    });
+</script>
+
 {% endblock %}
-
-

@@ -106,7 +106,13 @@ class BrowserTest extends WebTestCase
     public function testBorrowPage()
     {
         $client = $this->createClient();
-        $client->request('GET', '/borrow/1');
+        $crawler = $client->request('GET', '/borrow/1');
         $this->assertTrue($client->getResponse()->isOk());
+        $form = $crawler->selectButton('Register')->form();
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="form[user]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="form[start_date]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="form[end_date]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="form[place]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="text"][name="form[comment]"]'));
     }
 }
