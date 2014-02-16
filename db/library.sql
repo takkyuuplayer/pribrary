@@ -17,3 +17,16 @@ CREATE TABLE IF NOT EXISTS books (
     created_at INTEGER,
     updated_at INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS rentals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    user TEXT NOT NULL,
+    place TEXT NOT NULL,
+    return_flag INTEGER DEFAULT 0,
+    stash_data TEXT,
+    borrow_from INTEGER,
+    borrow_end INTEGER,
+    created_at INTEGER,
+    updated_at INTEGER
+);

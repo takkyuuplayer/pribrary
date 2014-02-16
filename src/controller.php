@@ -123,3 +123,23 @@ $app->get('/search', function(Request $request) use ($app) {
         'posted' => $request->query->all(),
     ));
 });
+
+$app->get('/borrow/{book_id}', function($book_id) use ($app) {
+    $book = ORM::for_table('books')
+        ->where_equal('id', $book_id)
+        ->find_one();
+
+    if(! $book) {
+        return $app->abort(404, "Book_id: $book_id does not exist.");
+    }
+
+    $category = ORM::for_table('categories')
+        ->where_equal('id', $book->category_id)
+        ->find_one();
+
+    return $app['twig']->render('borrow.html',
+        array('book' => $book,
+              'category' => $category,
+        'stash_data' => $book ? json_decode($book->stash_data) : '',
+    ));
+});

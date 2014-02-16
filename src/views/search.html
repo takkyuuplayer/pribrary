@@ -67,7 +67,10 @@
         <td>{{book.author|e}}</td>
         <td>{{book.title|e}}</td>
         <td>{{book.publisher|e}}</td>
-        <td><a href="/edit/{{book.id|e}}" class="btn btn-primary btn-mini">Edit</a></td>
+        <td>
+          <a href="/borrow/{{book.id|e}}" class="btn btn-primary btn-mini">Borrow</a>
+          <a href="/edit/{{book.id|e}}" class="btn btn-warning btn-mini">Edit</a>
+        </td>
       </tr>
     {% endfor %}
     </tbody>

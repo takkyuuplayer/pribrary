@@ -92,6 +92,7 @@ class BrowserTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('input[type="text"][name="author"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="title"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="publisher"]'));
+        $this->assertGreaterThan(0, $crawler->filter('a:contains("Borrow")')->count());
 
         $form = $crawler->selectButton('Search')->form();
         $form['author']    = basename(__FILE__, '.php');
@@ -99,6 +100,13 @@ class BrowserTest extends WebTestCase
         $form['publisher'] = basename(__FILE__, '.php');
         $crawler = $client->submit($form);
         $this->assertGreaterThanOrEqual(3, $crawler->filter(sprintf('td:contains("%s")', basename(__FILE__, '.php')))->count());
+        $this->assertTrue($client->getResponse()->isOk());
+    }
+
+    public function testBorrowPage()
+    {
+        $client = $this->createClient();
+        $client->request('GET', '/borrow/1');
         $this->assertTrue($client->getResponse()->isOk());
     }
 }
