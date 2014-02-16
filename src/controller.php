@@ -94,10 +94,15 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     ));
     $book->save();
 
+    $category = ORM::for_table('categories')
+        ->where_equal('id', $book->category_id)
+        ->find_one();
+
     return $app['twig']->render('show.html',
         array('book' => $book,
-              'stash_data' => json_decode($book->stash_data))
-    );
+            'category' => $category,
+            'stash_data' => $book ? json_decode($book->stash_data) : '',
+    ));
 });
 
 $app->get('/search', function(Request $request) use ($app) {

@@ -2,7 +2,17 @@
 {% set active_page = "rental" %}
 
 {% block content %}
-<legend>Current categories</legend>
+
+<div class="panel panel-default">
+  <div class="panel-heading">How to borrow?</div>
+  <div class="panel-body">
+    <ol>
+      <li><a href="/search">Search</a> books</li>
+      <li>Click "Borrow" and input informations</li>
+    </ol>
+  </div>
+</div>
+<legend>Rentaled list</legend>
 {{ rentals | length }} rentals.
 <table class="table table-bordered table-hover table-condensed">
   <thead>

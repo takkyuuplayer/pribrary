@@ -1,0 +1,14 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Book Information</h3>
+  </div>
+  <div class="panel-body">
+    <dl class="dl-horizontal">
+      <dt>Id</dt><dd>{{ book.id | escape }}</dd>
+      <dt>Category</dt><dd>{{category.label|default('no label')|e}}: {{category.description|default('')|e}}</dd>
+      <dt>Title</dt><dd>{{ book.title|escape }}</dd>
+      <dt>Publisher</dt><dd>{{ book.publisher|escape }}</dd>
+      <dt>Comment</dt><dd>{{ stash_data.comment|escape }}</dd>
+    </dl>
+  </div>
+</div>

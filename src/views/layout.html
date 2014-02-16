@@ -13,15 +13,13 @@
   {% endblock %}
 </head>
 <body>
-  <div class="jumbotron">
-    <div class="container">
-    <h1>Pribrary</h1>
-    </div>
-  </div>
 <div class="container">
+
+<div class="page-header">
+  <h1>Pribrary <small>- Web library system for private network -</small></h1>
+</div>
   <div class="row">
     <div class="col-md-2">
-    <legend>Menu</legend>
       {% set active_page = active_page|default('') %}
       <ul class="nav nav-pills nav-stacked">
         <li>New</li>
@@ -30,7 +28,7 @@
 
         <li>Circulation</li>
         <li {% if active_page == 'search'   %}class="active"{% endif %}><a href="/search">Search</a></li>
-        <li {% if active_page == 'rental'   %}class="active"{% endif %}><a href="/rental">Rentals</a></li>
+        <li {% if active_page == 'rental'   %}class="active"{% endif %}><a href="/rental">Rental</a></li>
       </ul>
     </div>
     <div class="col-md-10">
