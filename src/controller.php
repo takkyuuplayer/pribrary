@@ -3,6 +3,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use ApaiIO\Configuration\GenericConfiguration;
+use ApaiIO\Operations\Search;
+use ApaiIO\Operations\Lookup;
+use ApaiIO\ApaiIO;
+
 require_once PROJECT_DIR . '/src/lib/FormFactory.php';
 
 $app->get('/', function() use ($app) {
@@ -228,3 +233,25 @@ $app->post('/rental/delete/{rental_id}', function($rental_id, Request $request) 
 
     return $app->redirect('/rental');
 });
+
+$app->get('/isbn/{isbn}', function($isbn) use ($app) {
+    $conf = new GenericConfiguration();
+    $conf->setCountry('co.jp')
+        ->setAccessKey(ACCESS_KEY)
+        ->setSecretKey(SECRET_KEY)
+        ->setAssociateTag(ASSOCIATE_TAG);
+
+    $apaiIO = new ApaiIO($conf);
+
+    $lookup = new Lookup();
+    $lookup->setSearchIndex('Books')
+        ->setIdType('ISBN')
+        ->setItemId($isbn)
+        ->setResponseGroup(array('Small'));
+
+    $formattedResponse = $apaiIO->runOperation($lookup);
+    $sx = simplexml_load_string($formattedResponse)->Items->Item;
+    $detail = json_decode(json_encode($sx), true);
+    return $app->json($detail);
+});
+
