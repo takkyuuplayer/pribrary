@@ -99,7 +99,7 @@
           $('#loading').show();
           $.get('/isbn/' + $(this).val())
            .done(function(json) {
-             $('input[name="form[amazon]"]').val(JSON.stringify(json));
+             $('textarea[name="form[amazon]"]').val(JSON.stringify(json));
 
              if(_.isEmpty(json)) return;
              $('input[name="form[author]"]').val(_.isArray(json.ItemAttributes.Author) ? json.ItemAttributes.Author.join(', ') : json.ItemAttributes.Author);
