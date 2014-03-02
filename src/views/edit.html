@@ -89,7 +89,7 @@
       </div>
     </div>
     <input type="hidden" name="form[amazon]"
-    value="{{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? stash_data.amazon : '') | default('{}') | e }}" />
+    value="{{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? json_encode(stash_data.amazon) : '{}') | default('{}') | e }}" />
   </form>
 
   <script type="text/javascript">

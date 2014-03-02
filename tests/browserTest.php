@@ -79,6 +79,12 @@ class BrowserTest extends WebTestCase
         $crawler = $client->submit($form);
         $this->assertCount(0, $crawler->filter('input[name="form[_token]"]'));
         $this->assertSame($before + 1, ORM::for_table('books')->count(), '1 book inserted');
+
+        $book = ORM::for_table('books')->find_one();
+        $stash = json_decode($book->stash_data, true);
+        $crawler = $client->request('GET', '/edit/' . $book->id);
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter(sprintf('input[type="hidden"][name="form[amazon]"][value="%s"]', json_encode($stash['amazon']))));
     }
 
     /**
