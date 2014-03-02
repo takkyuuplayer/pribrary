@@ -20,7 +20,7 @@ class FormFactory
             ->add('category_id', 'text', array(
                 'constraints' => array(new Assert\Choice(array_values($category_ids)),),
             ))
-            ->add('category_id', 'text', array(
+            ->add('number', 'text', array(
                 'constraints' => array(new Assert\Range(array('min' => 0)),),
             ))
             ->add('isbn', 'text')
