@@ -28,6 +28,7 @@ class FormFactory
             ->add('publisher', 'text', array(
                 'constraints' => array(new Assert\NotBlank(),)))
             ->add('comment', 'text')
+            ->add('amazon', 'text')
             ->getForm()
         ;
     }

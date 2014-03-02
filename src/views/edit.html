@@ -77,6 +77,8 @@
         <button type="submit" class="btn btn-primary">Register</button>
       </div>
     </div>
+    <input type="hidden" name="form[amazon]"
+    value="{{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? stash_data.amazon : '') | default('{}') | e }}" />
   </form>
 
   <script type="text/javascript">
@@ -85,8 +87,10 @@
           $('#loading').show();
           $.get('/isbn/' + $(this).val())
            .done(function(json) {
+             $('input[name="form[amazon]"]').val(JSON.stringify(json));
+
              if(_.isEmpty(json)) return;
-             $('input[name="form[author]"]').val(json.ItemAttributes.Author);
+             $('input[name="form[author]"]').val(_.isArray(json.ItemAttributes.Author) ? json.ItemAttributes.Author.join(', ') : json.ItemAttributes.Author);
              $('input[name="form[title]"]').val(json.ItemAttributes.Title);
              $('input[name="form[publisher]"]').val(json.ItemAttributes.Manufacturer);
              })
