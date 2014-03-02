@@ -25,6 +25,18 @@
       </div>
     </div>
     <div class="form-group">
+      <label class="col-sm-2 control-label">ISBN</label>
+      <div class="col-sm-6">
+        <input name="form[isbn]" type="text"
+          class="form-control" placeholder="ISBN"
+          value="{{posted.isbn is defined ? posted.isbn : (stash_data.isbn is defined ? stash_data.isbn : '') | default() |e}}"
+          >
+      </div>
+      <div class="col-sm-1" id="loading" style="display:none;">
+        <img src="/css/loading.gif" alt="loading" title="loading" style="max-width: 60%; height: auto;" >
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-sm-2 control-label">Author</label>
       <div class="col-sm-10">
         <input required name="form[author]" type="text"
@@ -65,5 +77,27 @@
         <button type="submit" class="btn btn-primary">Register</button>
       </div>
     </div>
+    <input type="hidden" name="form[amazon]"
+    value="{{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? stash_data.amazon : '') | default('{}') | e }}" />
   </form>
+
+  <script type="text/javascript">
+    jQuery(function($) {
+        $('input[name="form[isbn]"]').on('change', function() {
+          $('#loading').show();
+          $.get('/isbn/' + $(this).val())
+           .done(function(json) {
+             $('input[name="form[amazon]"]').val(JSON.stringify(json));
+
+             if(_.isEmpty(json)) return;
+             $('input[name="form[author]"]').val(_.isArray(json.ItemAttributes.Author) ? json.ItemAttributes.Author.join(', ') : json.ItemAttributes.Author);
+             $('input[name="form[title]"]').val(json.ItemAttributes.Title);
+             $('input[name="form[publisher]"]').val(json.ItemAttributes.Manufacturer);
+             })
+           .always(function() {
+             $('#loading').hide();
+             });
+        });
+    });
+  </script>
 {% endblock %}

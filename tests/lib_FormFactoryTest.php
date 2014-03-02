@@ -40,6 +40,7 @@ class FormFactoryTest extends PHPUnit_Framework_TestCase
         $form = FormFactory::getBookEditForm($this->app, $category_ids);
         $view = $form->createView();
         $form->bind(array('category_id' => $category_ids[0],
+            'isbn' => '9784785310912',
             'author' => 'author',
             'title' => 'title',
             'publisher' => 'pub',

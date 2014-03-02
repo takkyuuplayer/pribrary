@@ -20,6 +20,7 @@ class FormFactory
             ->add('category_id', 'text', array(
                 'constraints' => array(new Assert\Choice(array_values($category_ids)),),
             ))
+            ->add('isbn', 'text')
             ->add('author', 'text', array(
                 'constraints' => array(new Assert\NotBlank(),)))
             ->add('title', 'text', array(
@@ -27,6 +28,7 @@ class FormFactory
             ->add('publisher', 'text', array(
                 'constraints' => array(new Assert\NotBlank(),)))
             ->add('comment', 'text')
+            ->add('amazon', 'text')
             ->getForm()
         ;
     }

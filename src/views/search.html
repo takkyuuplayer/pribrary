@@ -73,10 +73,25 @@
     <td>
       <a href="/borrow/{{book.id|e}}" class="btn btn-primary btn-mini">Borrow</a>
       <a href="/edit/{{book.id|e}}" class="btn btn-warning btn-mini">Edit</a>
+      {% set stash_data = json_decode(book.stash_data) %}
+      {% if stash_data.amazon.DetailPageURL is defined %}
+      <div class="btn-group">
+        <a href="{{ stash_data.amazon.DetailPageURL | e }}" target="_blank" class="btn btn-default">Amazon</a>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {% for link in stash_data.amazon.ItemLinks.ItemLink %}
+          <li><a href="{{link.URL|e}}" target="_blank">{{link.Description|e}}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}
-  </tbody>
+</tbody>
 </table>
 </div>
 {% endblock %}

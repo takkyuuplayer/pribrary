@@ -3,6 +3,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use ApaiIO\Configuration\GenericConfiguration;
+use ApaiIO\Operations\Search;
+use ApaiIO\Operations\Lookup;
+use ApaiIO\ApaiIO;
+
 require_once PROJECT_DIR . '/src/lib/FormFactory.php';
 
 $app->get('/', function() use ($app) {
@@ -91,6 +96,8 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     $book->publisher   = $values['publisher'];
     $book->stash_data  = json_encode(array(
         'comment' => $values['comment'],
+        'amazon' => json_decode($values['amazon'], true),
+        'isbn' => $values['isbn'],
     ));
     $book->save();
 
@@ -228,3 +235,28 @@ $app->post('/rental/delete/{rental_id}', function($rental_id, Request $request) 
 
     return $app->redirect('/rental');
 });
+
+$app->get('/isbn/{isbn}', function($isbn) use ($app) {
+    if(!defined('ACCESS_KEY') || !defined('SECRET_KEY') || !defined('ASSOCIATE_TAG')) {
+        return $app->json(array());
+    }
+    $conf = new GenericConfiguration();
+    $conf->setCountry('co.jp')
+        ->setAccessKey(ACCESS_KEY)
+        ->setSecretKey(SECRET_KEY)
+        ->setAssociateTag(ASSOCIATE_TAG);
+
+    $apaiIO = new ApaiIO($conf);
+
+    $lookup = new Lookup();
+    $lookup->setSearchIndex('Books')
+        ->setIdType('ISBN')
+        ->setItemId($isbn)
+        ->setResponseGroup(array('Small'));
+
+    $formattedResponse = $apaiIO->runOperation($lookup);
+    $sx = simplexml_load_string($formattedResponse)->Items->Item;
+    $detail = json_decode(json_encode($sx), true);
+    return $app->json($detail);
+});
+
