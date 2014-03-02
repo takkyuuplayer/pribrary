@@ -88,8 +88,9 @@
         <button type="submit" class="btn btn-primary">Register</button>
       </div>
     </div>
-    <input type="hidden" name="form[amazon]"
-    value="{{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? json_encode(stash_data.amazon) : '{}') | default('{}') | e }}" />
+    <textarea style="display:none;" name="form[amazon]">
+    {{ posted is defined ? posted.amazon : (stash_data.amazon is defined ? json_encode(stash_data.amazon) : '{}') | default('{}')}}
+    </textarea>
   </form>
 
   <script type="text/javascript">
