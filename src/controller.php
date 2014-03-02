@@ -82,16 +82,18 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
         ));
     }
 
-    $book = ORM::for_table('books')
+    require_once PROJECT_DIR . '/src/models/Book.php';
+    $book = Model::factory('Books')
         ->where_equal('id', $book_id)
         ->find_one();
     if(!$book) {
-        $book = ORM::for_table('books')->create();
+        $book = Model::factory('Books')->create();
     }
 
     $values = $form->getData();
     $book->category_id = $values['category_id'];
     $book->author      = $values['author'];
+    $book->number = isset($values['number']) ? $values['number'] : null;
     $book->title       = $values['title'];
     $book->publisher   = $values['publisher'];
     $book->stash_data  = json_encode(array(
