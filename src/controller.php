@@ -96,7 +96,7 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
     $book->publisher   = $values['publisher'];
     $book->stash_data  = json_encode(array(
         'comment' => $values['comment'],
-        'amazon' => $values['amazon'],
+        'amazon' => json_decode($values['amazon'], true),
         'isbn' => $values['isbn'],
     ));
     $book->save();
