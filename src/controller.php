@@ -7,7 +7,7 @@ use ApaiIO\Configuration\GenericConfiguration;
 use ApaiIO\Operations\Search;
 use ApaiIO\Operations\Lookup;
 use ApaiIO\ApaiIO;
-
+require_once PROJECT_DIR . '/src/models/Book.php';
 require_once PROJECT_DIR . '/src/lib/FormFactory.php';
 
 $app->get('/', function() use ($app) {
@@ -82,16 +82,17 @@ $app->post('/edit/{book_id}', function(Request $request, $book_id) use ($app) {
         ));
     }
 
-    $book = ORM::for_table('books')
+    $book = Model::factory('Books')
         ->where_equal('id', $book_id)
         ->find_one();
     if(!$book) {
-        $book = ORM::for_table('books')->create();
+        $book = Model::factory('Books')->create();
     }
 
     $values = $form->getData();
     $book->category_id = $values['category_id'];
     $book->author      = $values['author'];
+    $book->number = isset($values['number']) ? $values['number'] : null;
     $book->title       = $values['title'];
     $book->publisher   = $values['publisher'];
     $book->stash_data  = json_encode(array(
@@ -129,9 +130,13 @@ $app->get('/search', function(Request $request) use ($app) {
 
     $books = $book->find_many();
     $categories = ORM::for_table('categories')->find_many();
+    $cat = array();
+    foreach($categories as $category) {
+        $cat[$category->id] = $category;
+    }
     return $app['twig']->render('search.html',
         array('books' => $books,
-        'categories' => $categories,
+        'categories' => $cat,
         'posted' => $request->query->all(),
     ));
 });

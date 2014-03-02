@@ -59,6 +59,7 @@ class BrowserTest extends WebTestCase
         $crawler = $client->request('GET', '/edit');
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertCount(1, $crawler->filter('select[name="form[category_id]"]'));
+        $this->assertCount(1, $crawler->filter('input[type="number"][name="form[number]"]'));
         $this->assertCount(1, $crawler->filter('li:contains("Book").active'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[author]"]'));
         $this->assertCount(1, $crawler->filter('input[type="text"][name="form[title]"]'));
