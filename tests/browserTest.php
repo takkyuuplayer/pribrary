@@ -84,7 +84,7 @@ class BrowserTest extends WebTestCase
         $stash = json_decode($book->stash_data, true);
         $crawler = $client->request('GET', '/edit/' . $book->id);
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter(sprintf('input[type="hidden"][name="form[amazon]"][value="%s"]', json_encode($stash['amazon']))));
+        $this->assertCount(1, $crawler->filter('textarea[name="form[amazon]"]'));
     }
 
     /**
