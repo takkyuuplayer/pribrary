@@ -1,4 +1,3 @@
 /vendor/
 composer.phar
 /db/books.sqlite3
-src/config/amazon.php
